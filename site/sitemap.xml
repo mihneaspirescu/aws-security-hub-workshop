@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
+     <loc>https://security-hub-workshop.awssecworkshops.com/</loc>
+     <lastmod>2021-04-20</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://security-hub-workshop.awssecworkshops.com/00-environment-setup/</loc>
+     <lastmod>2021-04-20</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://security-hub-workshop.awssecworkshops.com/01-security-hub-walk-through/</loc>
+     <lastmod>2021-04-20</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://security-hub-workshop.awssecworkshops.com/02-guardduty-walk-through/</loc>
+     <lastmod>2021-04-20</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://security-hub-workshop.awssecworkshops.com/03-custom-insights-findings/</loc>
+     <lastmod>2021-04-20</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://security-hub-workshop.awssecworkshops.com/04-remediation-and-response/</loc>
+     <lastmod>2021-04-20</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://security-hub-workshop.awssecworkshops.com/contribute/</loc>
+     <lastmod>2021-04-20</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://security-hub-workshop.awssecworkshops.com/LICENSE</loc>
+     <lastmod>2021-04-20</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+</urlset>

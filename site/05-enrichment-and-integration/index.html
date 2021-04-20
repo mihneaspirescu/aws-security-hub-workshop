@@ -1,0 +1,864 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AWS Security Hub allows you to centrally view and manage security alerts and automate security checks across AWS accounts. This workshop provides hands on experience with the full functionality that Security Hub provides. Your workshop starts with a guided tour of the Security Hub UI and its features. Next, you will integrate security findings from AWS services, learn how to integrate 3rd party security findings for your AWS environment, and build out your own custom security finding integration. Finally, you will respond to the security findings in your environment by taking action via manual and automated response techniques.">
+      
+      
+      
+        <meta name="author" content="aws-security-workshops@amazon.com">
+      
+      
+        <link rel="canonical" href="https://security-hub-workshop.awssecworkshops.com/05-enrichment-and-integration/">
+      
+      <link rel="icon" href="../assets/images/aws-favicon.ico">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.1.2">
+    
+    
+      
+        <title>Module 5: Finding Enrichment and Integration - Integration, Prioritization, and Response with AWS Security Hub</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f955dcd.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ef6f36e2.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../stylesheets/custom.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#module-5-finding-enrichment-and-integration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Integration, Prioritization, and Response with AWS Security Hub" class="md-header__button md-logo" aria-label="Integration, Prioritization, and Response with AWS Security Hub" data-md-component="logo">
+      
+  <img src="../assets/images/aws_smile_logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Integration, Prioritization, and Response with AWS Security Hub
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Module 5: Finding Enrichment and Integration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/aws-samples/aws-security-hub-workshop/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws-samples/aws-security-hub-workshop
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Integration, Prioritization, and Response with AWS Security Hub" class="md-nav__button md-logo" aria-label="Integration, Prioritization, and Response with AWS Security Hub" data-md-component="logo">
+      
+  <img src="../assets/images/aws_smile_logo.png" alt="logo">
+
+    </a>
+    Integration, Prioritization, and Response with AWS Security Hub
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/aws-samples/aws-security-hub-workshop/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws-samples/aws-security-hub-workshop
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-environment-setup/" class="md-nav__link">
+        Module 0: Environment Build
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-security-hub-walk-through/" class="md-nav__link">
+        Module 1: Security Hub Walkthrough
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-guardduty-walk-through/" class="md-nav__link">
+        Module 2: Amazon GuardDuty Walkthrough
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-custom-insights-findings/" class="md-nav__link">
+        Module 3: Custom Insights & Findings
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-remediation-and-response/" class="md-nav__link">
+        Module 4: Remediation & Response
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contribute/" class="md-nav__link">
+        Contributing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#custom-action-to-send-findings-to-slack" class="md-nav__link">
+    Custom Action to Send Findings to Slack
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Action to Send Findings to Slack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-slack" class="md-nav__link">
+    Setup Slack
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-channel-to-receive-security-hub-alerts" class="md-nav__link">
+    Create a channel to receive security hub alerts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-an-incoming-webhook-in-slack-api" class="md-nav__link">
+    Create an Incoming Webhook in Slack API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-custom-action-in-security-hub" class="md-nav__link">
+    Create Custom Action in Security Hub
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-eventbridge-rule-for-security-hub-custom-actions-to-lambda" class="md-nav__link">
+    Create a EventBridge Rule for Security Hub Custom Actions to Lambda
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-the-lambda-function-to-send-messages-to-slack" class="md-nav__link">
+    Update the Lambda Function to send messages to Slack
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-the-integration-between-security-hub-and-slack" class="md-nav__link">
+    Testing the Integration between Security Hub and Slack
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-custom-action-to-add-tag-data-as-notes-to-security-hub-findings" class="md-nav__link">
+    Enable Custom Action to add Tag data as Notes to Security Hub Findings
+  </a>
+  
+    <nav class="md-nav" aria-label="Enable Custom Action to add Tag data as Notes to Security Hub Findings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-security-hub-custom-action" class="md-nav__link">
+    Create Security Hub Custom Action
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-eventbridge-rule-to-capture-security-hub-custom-action" class="md-nav__link">
+    Create a EventBridge Rule to capture Security Hub Custom action
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-your-enrichment-rule" class="md-nav__link">
+    Test your enrichment rule
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/aws-samples/aws-security-hub-workshop/edit/master/docs/05-enrichment-and-integration.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="module-5-finding-enrichment-and-integration">Module 5: Finding Enrichment and Integration</h1>
+<p>In this module you will explore two patterns to respond to findings via a notification workflow.  In the first section, you will setup a custom action to post Security Hub findings into a Slack channel.  In the second section, you will use a custom action to look up and add EC2 tags to findings as a custom note.</p>
+<p><strong>Agenda</strong></p>
+<ol>
+<li>Custom Action to Send Findings to Slack – 20 min</li>
+<li>Enable Custom Action to add Tag data as Notes to Security Hub Findings  - 10 min</li>
+</ol>
+<h2 id="custom-action-to-send-findings-to-slack">Custom Action to Send Findings to Slack</h2>
+<p>In this section we will setup a custom action that will send the details of a Security Hub Finding to a lambda function that will format the message and then post into our demo Slack security channel.  A more automated workflow could also be created where all, or a filtered set of, Security Hub findings could be sent to slack.  </p>
+<p>Once the setup is complete, the finding data will flow from left to right in the below diagram. However, the setup steps themselves must be completed in the numbered order to accommodate required dependencies. </p>
+<p><img alt="ChatOps" src="../images/04-slack-integration-diagram.png" /></p>
+<h3 id="setup-slack">Setup Slack</h3>
+<ol>
+<li>Use the following link to create a new Slack Workspace for yourself:<br />
+https://get.slack.help/hc/en-us/articles/206845317-Create-a-Slack-workspace </li>
+</ol>
+<div class="admonition info">
+<p class="admonition-title">After completing these steps, you should have a slack workspace with a name you used to create it. Keep this information handy.</p>
+</div>
+<h3 id="create-a-channel-to-receive-security-hub-alerts">Create a channel to receive security hub alerts</h3>
+<p>When you created the slack workspace, you would have typed in something under “What is your Company doing?”. This sets up a default channel on Slack. You can choose to use this to receive Security Hub findings or create a new channel.</p>
+<p>If you want to create a new channel click on the + next to 'Channels' and create a new channel.</p>
+<p><img alt="ChatOps" src="../images/04-chatops-create-channel.png" /></p>
+<h3 id="create-an-incoming-webhook-in-slack-api">Create an Incoming Webhook in Slack API</h3>
+<ol>
+<li>
+<p>Go to your Slack API(https://api.slack.com).  </p>
+</li>
+<li>
+<p>Click <strong>Start Building</strong>.  </p>
+</li>
+<li>
+<p>Click on <strong>Create an App</strong> button. </p>
+</li>
+<li>
+<p>Fill in the following details for your app:  </p>
+<ul>
+<li><strong>App Name</strong>: security-hub-to-slack </li>
+<li><strong>Development Slack Workspace</strong>: Choose the Slack workspace that will receive the Security Hub findings ( this is the one you created)  </li>
+</ul>
+<p><img alt="SlackApp" src="../images/04-slack-create-app.png" /></p>
+</li>
+<li>
+<p>Click the <strong>Create App</strong> Button.</p>
+</li>
+<li>
+<p>Select <strong>Incoming Webhooks</strong>. </p>
+</li>
+<li>
+<p>At the <strong>Activate Incoming Webhooks</strong> screen, move the slider from OFF to ON. </p>
+</li>
+<li>
+<p>Scroll down and choose <strong>Add New Webhook to Workspace</strong>. </p>
+</li>
+<li>
+<p>In the screen asking where your app should post choose the channel that you created in an earlier step.</p>
+<p><img alt="SlackAppChannel" src="../images/04-slack-app-channel-choose.png" /></p>
+</li>
+<li>
+<p>On the next screen, scroll down to the Webhook URL section and save the URL as you will need it later to complete your setup.</p>
+</li>
+</ol>
+<h3 id="create-custom-action-in-security-hub">Create Custom Action in Security Hub</h3>
+<p>To send information on findings that are in Security Hub to Slack a custom action in Security Hub needs to be defined. The following steps outline how to set up a custom action: </p>
+<ol>
+<li>
+<p>Go to Security Hub Console: https://console.aws.amazon.com/securityhub/. </p>
+</li>
+<li>
+<p>Click on <strong>Settings</strong>. </p>
+<p><img alt="ChatOps" src="../images/04-chatops-sechub.png" /></p>
+</li>
+<li>
+<p>Click <strong>Custom Actions</strong>.</p>
+<p><img alt="ChatOps" src="../images/04-chatops-sechub-settings.png" /></p>
+</li>
+<li>
+<p>Select Create Custom Action. Fill in: </p>
+<ul>
+<li><strong>Action Name</strong> as ‘Send to Slack’, </li>
+<li><strong>Description</strong> as ‘Custom action to send security findings to Slack.’ </li>
+<li><strong>Custom Action ID</strong> as shslaction </li>
+</ul>
+</li>
+<li>
+<p>Click <strong>Create custom action</strong>.</p>
+</li>
+</ol>
+<p><img alt="ChatOps" src="../images/04-chatops-sechub-create.png" /></p>
+<h3 id="create-a-eventbridge-rule-for-security-hub-custom-actions-to-lambda">Create a EventBridge Rule for Security Hub Custom Actions to Lambda</h3>
+<p>Taking action on a finding in Security Hub results in the information for the finding and the ARN of the custom action being sent to EventBridge. To successfully process this action, a EventBridge rule  needs to be defined so the action information can be sent to Slack. </p>
+<ol>
+<li>
+<p>Navigate to the <strong>Amazon EventBridge</strong> Console.</p>
+</li>
+<li>
+<p>Click on the <strong>Create rule</strong> on the right side.</p>
+<p><img alt="Custom Action" src="../images/03-custom-eventbridge.png" /></p>
+</li>
+<li>
+<p>In the Create rule page give your rule a <strong>name</strong> and a <strong>description</strong> that represents the rule's purpose.</p>
+<p><img alt="ChatOps" src="../images/04-chatops-custom-create-rule.png" /></p>
+<div class="admonition info">
+<p class="admonition-title">All Security Hub findings are sent as events to the AWS default event bus.  The define pattern section allows you to identify filters to take a specific action when matched events appear.</p>
+</div>
+</li>
+<li>
+<p>Under Define pattern, select <strong>Event pattern</strong>. </p>
+</li>
+<li>
+<p>Select <strong>Pre-defined pattern by service</strong>.</p>
+</li>
+<li>
+<p>In the drop down for <strong>Service Provider</strong>, select <strong>AWS</strong>.</p>
+</li>
+<li>
+<p>In the drop down for <strong>Service Name</strong>, select or type and select <strong>Security Hub</strong>. </p>
+</li>
+<li>
+<p>In the drop down for <strong>Event type</strong> choose <strong>Security Hub Finding – Custom Action</strong>.</p>
+<p><img alt="ChatOps" src="../images/03-custom-create-event-source.png" /></p>
+</li>
+<li>
+<p>In the <strong>Event Pattern</strong> window click the <strong>Edit</strong> button. </p>
+</li>
+<li>
+<p>Add in the resources line as shown below, making sure to copy in the ARN of <strong>your Custom Event</strong>.  Click <strong>Save</strong>. </p>
+<div class="admonition info">
+<p class="admonition-title">Note the comma after the bracket before the resources definition.</p>
+</div>
+<p>Copy and paste in the custom event pattern below.  Use the ARN you recorded for your Security Hub Custom Action </p>
+<p><pre>
+<code>{ 
+"source": [ 
+    "aws.securityhub" 
+  ], 
+  "detail-type": [ 
+    "Security Hub Findings - Custom Action" 
+  ], 
+  "resources": [ 
+     "arn:aws:securityhub:us-east-1:[YOUR-ACCOUNT-ID]:action/custom/shslaction" 
+  ] 
+}</code></p>
+<p><img alt="ChatOps" src="../images/04-chatops-create-event-pattern-updated.png" /></p>
+</li>
+<li>
+<p>Under Select targets, select <strong>Lambda function</strong>.</p>
+</li>
+<li>
+<p>Then select the <strong>sechub-to-slack</strong> lambda function. </p>
+<p><img alt="Custom Action" src="../images/04-slack-lambda-create-confirm.png" /></p>
+</li>
+<li>
+<p>Click <strong>Create</strong>.</p>
+</li>
+</ol>
+<h3 id="update-the-lambda-function-to-send-messages-to-slack">Update the Lambda Function to send messages to Slack</h3>
+<p>The last step in this setup is to update the environment variables of your lambda function so that notifications can be sent to the correct Slack workspace.</p>
+<ol>
+<li>
+<p>Navigate to the <strong>Lambda</strong> console.</p>
+</li>
+<li>
+<p>In the list of functions choose the <strong>sechub-to-slack</strong> function.</p>
+</li>
+<li>
+<p>Scroll down to environment variables and click <strong>Edit</strong>   Fill in:</p>
+<ul>
+<li><strong>slackChannel:</strong> the value from the Slack channel you created earlier in this workshop.</li>
+<li><strong>webHookUrl:</strong> URL of the webhook for the Slack setup you created earlier in this workshop.</li>
+</ul>
+<p><img alt="Lambda Slack Env" src="../images/04-slack-lambda-env.png" /></p>
+</li>
+<li>
+<p>Click <strong>Save</strong>.</p>
+</li>
+</ol>
+<h3 id="testing-the-integration-between-security-hub-and-slack">Testing the Integration between Security Hub and Slack</h3>
+<p>At this point, you are now able to start using a Security Hub custom action to send Findings to Slack. </p>
+<ol>
+<li>
+<p>Go to Security Hub Console: https://console.aws.amazon.com/securityhub </p>
+</li>
+<li>
+<p>Click on <strong>Findings</strong> option, and the Findings screen will show a list of all your open Security Hub findings. </p>
+</li>
+<li>
+<p>Choose any one of the findings and then select the <strong>Send to Slack</strong> custom action from the <strong>Actions</strong> drop down. A success message appears indicating the event was sent to CloudWatch events. </p>
+<p><img alt="ChatOps" src="../images/04-chatops-slack-send.png" /></p>
+<div class="admonition info">
+<p class="admonition-title">Your custom actions drop down list will have more options than displayed here.</p>
+</div>
+</li>
+<li>
+<p>In <strong>Slack</strong>, navigate to your channel to see the finding that was sent from Security Hub. </p>
+<p><img alt="ChatOps" src="../images/04-chatops-slack-confirm.png" /></p>
+</li>
+</ol>
+<h2 id="enable-custom-action-to-add-tag-data-as-notes-to-security-hub-findings">Enable Custom Action to add Tag data as Notes to Security Hub Findings</h2>
+<p>In this section you will follow the same pattern of creating a Security Hub custom action and EventBridge rule to Lambda.  The custom Lambda function will look up the tags for an EC2 instance, and the resulting tag information will be added to the selected Security Hub finding as a note.</p>
+<h3 id="create-security-hub-custom-action">Create Security Hub Custom Action</h3>
+<ol>
+<li>
+<p>Navigate to the <strong>Security Hub dashboard</strong>. </p>
+</li>
+<li>
+<p>In the left-hand navigation pane choose <strong>Settings</strong>. </p>
+</li>
+<li>
+<p>Choose the <strong>Custom actions</strong> tab. </p>
+</li>
+<li>
+<p>Click the <strong>Create custom action</strong> button. </p>
+</li>
+<li>
+<p>Enter an Action <strong>Name</strong> (Displayed in the Security Hub Console), <strong>Action Description</strong>, and an <strong>Action ID</strong> of "getTags".</p>
+<p><img alt="Enrich" src="../images/04-enrich-custom-action-create.png" /></p>
+</li>
+<li>
+<p>Click <strong>Create custom action</strong>. </p>
+</li>
+<li>
+<p>Copy the Custom action ARN that was generated for your custom finding.</p>
+</li>
+</ol>
+<div class="admonition info">
+<p class="admonition-title">You will need the custom action ARN in the next steps. </p>
+</div>
+<h3 id="create-a-eventbridge-rule-to-capture-security-hub-custom-action">Create a EventBridge Rule to capture Security Hub Custom action</h3>
+<ol>
+<li>
+<p>Navigate to the <strong>Amazon EventBridge</strong> Console.</p>
+</li>
+<li>
+<p>Click on the <strong>Create rule</strong> on the right side.</p>
+</li>
+<li>
+<p>In the Create rule page give your rule a <strong>name</strong> and a <strong>description</strong> that represents the rule's purpose.</p>
+</li>
+<li>
+<p>Under Define pattern, select <strong>Event pattern</strong>. </p>
+</li>
+<li>
+<p>Select <strong>Pre-defined pattern by service</strong>.</p>
+</li>
+<li>
+<p>In the drop down for <strong>Service Provider</strong>, select <strong>AWS</strong>.</p>
+</li>
+<li>
+<p>In the drop down for <strong>Service Name</strong>, select or type and select <strong>Security Hub</strong>. </p>
+</li>
+<li>
+<p>In the drop down for <strong>Event type</strong> choose <strong>Security Hub Finding – Custom Action</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Event Pattern</strong> window click the <strong>Edit</strong> button. </p>
+</li>
+<li>
+<p>Add in the resources line as shown below, making sure to copy in the ARN of <strong>your Custom Event</strong>.  Click <strong>Save</strong>. </p>
+<div class="admonition info">
+<p class="admonition-title">Note the comma after the bracket before the resources definition.</p>
+</div>
+<p>Copy and paste in the custom event pattern below.  Use the ARN you recorded for your Security Hub Custom Action </p>
+<p><pre>
+<code>{ 
+"source": [ 
+    "aws.securityhub" 
+  ], 
+  "detail-type": [ 
+    "Security Hub Findings - Custom Action" 
+  ], 
+  "resources": [ 
+     "arn:aws:securityhub:us-east-1:[YOUR-ACCOUNT-ID]:action/custom/getTags" 
+  ] 
+}</code>
+<img alt="Enrich" src="../images/04-enrich-create-event-pattern-updated.png" /></p>
+</li>
+<li>
+<p>Under Select targets, ensure <strong>Lambda function</strong> is populated in the top drop down and then select <strong>enrich-sec-hub-finding</strong> lambda function. </p>
+</li>
+<li>
+<p>Click <strong>Create</strong>.</p>
+</li>
+</ol>
+<h3 id="test-your-enrichment-rule">Test your enrichment rule</h3>
+<ol>
+<li>
+<p>Navigate to the <strong>Security Hub Dashboard</strong>.</p>
+</li>
+<li>
+<p>In the left-hand navigation pane choose <strong>Findings</strong>. </p>
+</li>
+<li>
+<p>Click in the search space to <strong>Add filters</strong>, and find <strong>Resource Type</strong>.</p>
+</li>
+<li>
+<p>Add <strong>AwsEc2Instance</strong> (case sensitive) after EQUALS and click <strong>Apply</strong>.</p>
+<p><img alt="Enrich" src="../images/04-enrich-sechub-filter.png" /></p>
+</li>
+<li>
+<p><strong>Click the Title</strong> of the first finding in the list and observe that there are currently no <strong>notes</strong> in this finding.</p>
+<p><img alt="Enrich" src="../images/04-enrich-finding-before.png" /></p>
+</li>
+<li>
+<p>Click the <strong>check box</strong> to the left of this same finding.</p>
+</li>
+<li>
+<p>Click the <strong>Actions down arrow</strong> and select your new custom action (Get Tag Information) to add tags to the notes of this finding.</p>
+</li>
+<li>
+<p><strong>Refresh</strong> your browser.</p>
+</li>
+<li>
+<p><strong>Click the Title</strong> of the first finding again, and this time view the Notes.</p>
+<p><img alt="Enrich" src="../images/04-enrich-finding-after.png" /></p>
+</li>
+</ol>
+<div class="admonition question">
+<p class="admonition-title">What other data would you add to findings ad-hoc or automatically?</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">How would you edit the EventBridge rule to have the enrich function run every time a new finding is created, instead of manually initiated?</p>
+</div>
+<p>In this module you explored two possible methods to improve operational response time to Security Hub findings by receiving a finding in Slack and by adding customized context to a finding.  </p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site terms</a> | &copy; 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+        
+        
+      
+      <a href="https://awssecworkshops.com" target="_blank" rel="noopener" title="awssecworkshops.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M280.37 148.26 96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47 488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://aws.amazon.com/security/" target="_blank" rel="noopener" title="aws.amazon.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="m466.5 83.7-192-80a48.15 48.15 0 0 0-36.9 0l-192 80C27.7 91.1 16 108.6 16 128c0 198.5 114.5 335.7 221.5 380.3 11.8 4.9 25.1 4.9 36.9 0C360.1 472.6 496 349.3 496 128c0-19.4-11.7-36.9-29.5-44.3zM256.1 446.3l-.1-381 175.9 73.3c-3.3 151.4-82.1 261.1-175.8 307.7z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://twitter.com/awssecurityinfo?lang=en" target="_blank" rel="noopener" title="twitter.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://aws.amazon.com/blogs/security/" target="_blank" rel="noopener" title="aws.amazon.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M400 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V80c0-26.51-21.49-48-48-48zM112 416c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm157.533 0h-34.335c-6.011 0-11.051-4.636-11.442-10.634-5.214-80.05-69.243-143.92-149.123-149.123-5.997-.39-10.633-5.431-10.633-11.441v-34.335c0-6.535 5.468-11.777 11.994-11.425 110.546 5.974 198.997 94.536 204.964 204.964.352 6.526-4.89 11.994-11.425 11.994zm103.027 0h-34.334c-6.161 0-11.175-4.882-11.427-11.038-5.598-136.535-115.204-246.161-251.76-251.76C68.882 152.949 64 147.935 64 141.774V107.44c0-6.454 5.338-11.664 11.787-11.432 167.83 6.025 302.21 141.191 308.205 308.205.232 6.449-4.978 11.787-11.432 11.787z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../assets/javascripts/workers/search.fe42c31b.min.js", "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.4ea5477f.min.js"></script>
+      
+    
+  </body>
+</html>
