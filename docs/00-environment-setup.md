@@ -68,7 +68,6 @@ To configure the workshop you will need to deploy the master workshop template.
 
 Region| Deploy
 ------|-----
-US West 2 (Oregon) | <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=SecurityHubWorkshop&templateURL=https://sa-security-specialist-workshops-us-west-2.s3-us-west-2.amazonaws.com/security-hub-workshop/templates/sechub-workshop-setup-template.json" target="_blank">![Deploy Module 1 in us-west-2](./images/deploy-to-aws.png)</a>|
 US East 1 (Virgina) | <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=SecurityHubWorkshop&templateURL=https://sa-security-specialist-workshops-us-east-1.s3.amazonaws.com/security-hub-workshop/templates/sechub-workshop-setup-template.json" target="_blank">![Deploy Module 1 in us-east1](./images/deploy-to-aws.png)</a>
 
 1. Click the **Deploy to AWS** button above.  This will automatically take you to the console to run the template, click Next to get to the Specify Details page. 
