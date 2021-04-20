@@ -21,40 +21,24 @@ For this workshop there will be multiple pieces of infrastructure and AWS servic
 Multiple EC2 instances will be launched to facilitate the generation of findings from GuardDuty & Inspector.  Additionally these instances will be used to help with demonstration of integration of custom findings into Security Hub.
 
 Multiple AWS services will be configured in the workshop to help facilitate the generation of Security Hub findings.  These services include:
+
 * Security Hub
 * GuardDuty 
 * Secrets Manager
 * Inspector
 * Config
 
-
-## Presentation deck
-[Security Hub Workshop Presentation](./security-hub-workshop-presentation.pdf)
-
 ## Region
-Please use **us-west-2 (Oregon)** or **us-east-1 (Virgina)** for this workshop.
+Please use **us-east-1 (Virgina)** for this workshop.
 
 ## Modules
 
 This workshop is broken up into setup and then four modules: 
 
 0. [Initial Environment Setup ](./00-environment-setup.md)
-1. [Security Hub Walk Through ](./01-security-hub-walk-through.md)
-2. [Custom Insights and Custom Findings](./02-custom-insights-findings.md) 
-3. [Remediation and Response Custom Action](./03-remediation-and-response.md) 
-4. [Enrichment and Integration](./04-enrichment-and-integration.md)
+1. [AWS Security Hub Walk Through ](./01-security-hub-walk-through.md)
+2. [Amazon GuardDuty Walk Through ](./02-guardduty-walk-through.md)
+3. [Custom Insights and Custom Findings](./03-custom-insights-findings.md) 
+4. [Remediation and Response Custom Action](./04-remediation-and-response.md) 
 
 
-
-## Contributing
-Your contributions are always welcome! Please have a look at the [contribution guidelines](contribute.md) first. :tada:
-
-[(Back to top)](#Overview)
-
-## License Summary
-
-The documentation is made available under the Creative Commons Attribution-ShareAlike 4.0 International License. See the [LICENSE](LICENSE) file.
-
-The sample code within this documentation is made available under the MIT-0 license. See the [LICENSE-SAMPLECODE](LICENSE-SAMPLECODE.md) file.
-
-[(Back to top)](#Overview)
